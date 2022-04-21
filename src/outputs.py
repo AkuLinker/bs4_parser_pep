@@ -22,8 +22,9 @@ def default_output(results):
 
 def pretty_output(results):
     table = PrettyTable()
+    table.field_names = results[0]
     table.align = 'l'
-    table.add_rows(results)
+    table.add_rows(results[1:])
     print(table)
 
 def file_output(results, cli_args):
