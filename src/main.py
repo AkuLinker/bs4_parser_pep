@@ -6,7 +6,7 @@ import requests_cache
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-from constants import BASE_DIR, MAIN_DOC_URL
+from constants import BASE_DIR, MAIN_DOC_URL, MAIN_PEP_URL, EXPECTED_STATUS
 from configs import configure_argument_parser, configure_logging
 from outputs import control_output
 from utils import get_response, find_tag
@@ -25,7 +25,7 @@ def whats_new(session):
         'li', attrs={'class': 'toctree-l1'}
     )
 
-    results = []
+    results = [('Ссылка на статью', 'Заголовок', 'Редактор, Aвтор')]
     for section in tqdm(sections_by_python):
         version_a_tag = section.find('a')
         version_link = urljoin(whats_new_url, version_a_tag['href'])
@@ -58,7 +58,7 @@ def latest_versions(session):
     else:
         raise Exception('Ничего не нашлось')
 
-    results = []
+    results = [('Ссылка на документацию', 'Версия', 'Статус')]
     pattern = r'Python (?P<version>\d\.\d+) \((?P<status>.*)\)'
     for a_tag in a_tags:
         link = a_tag['href']
@@ -97,10 +97,50 @@ def download(session):
         file.write(response.content)
     logging.info(f'Архив был загружен и сохранён: {archive_path}')
 
+def pep(session):
+    response = get_response(session, MAIN_PEP_URL)
+    if response is None:
+        return
+    soup = BeautifulSoup(response.text, features='lxml')
+    section_tag = find_tag(soup, 'section', attrs={'id': 'numerical-index'})
+    tbody_tag = find_tag(section_tag, 'tbody')
+    tr_tags = tbody_tag.find_all('tr')
+    results = [('Cтатус', 'Количество')]
+    pep_sum = {}
+    total_sum = 0
+    differences = []
+    for tr_tag in tqdm(tr_tags):
+        total_sum += 1
+        a_tag = find_tag(tr_tag, 'a', attrs={'class': 'reference external'})
+        pep_url = urljoin(MAIN_PEP_URL, a_tag['href'])
+        response = get_response(session, pep_url)
+        soup = BeautifulSoup(response.text, features='lxml')
+        dl_tag = find_tag(soup, 'dl', attrs={'class': 'rfc2822'})
+        dd_tag = find_tag(dl_tag, 'dt', string='Status').find_next_sibling('dd')
+        status = dd_tag.string
+        status_in_main_page = find_tag(tr_tag, 'td').string[1:]
+        if status not in EXPECTED_STATUS[status_in_main_page]:
+            differences.append([pep_url, status, status_in_main_page])
+        if status in pep_sum: pep_sum[status] += 1
+        else: pep_sum[status] = 1
+    if differences:
+        for pep_url, status, status_in_main_page in differences:
+            logging.info(
+                f'Несовпадающие статусы:\n'
+                f'{pep_url}\n'
+                f'Cтатус в карточке: {status}\n'
+                f'Ожидаемые статусы: {EXPECTED_STATUS[status_in_main_page]}'
+            )
+    for key, value in pep_sum.items():
+        results.append((key, value))
+    results.append(('Total: ', total_sum))
+    return results
+
 MODE_TO_FUNCTION = {
     'whats-new': whats_new,
     'latest-versions': latest_versions,
     'download': download,
+    'pep': pep,
 }
 
 def main():
