@@ -13,6 +13,9 @@ from utils import get_response, find_tag
 
 
 def whats_new(session):
+    """
+    Парсер выводящий спсок изменений в python.
+    """
     whats_new_url = urljoin(MAIN_DOC_URL, 'whatsnew/')
     response = get_response(session, whats_new_url)
     if response is None:
@@ -43,6 +46,9 @@ def whats_new(session):
     return results
 
 def latest_versions(session):
+    """
+    Парсер выводящий список версий python и ссылки на их документацию.
+    """
     response = get_response(session, MAIN_DOC_URL)
     if response is None:
         return
@@ -73,6 +79,9 @@ def latest_versions(session):
     return results
 
 def download(session):
+    """
+    Парсер скачивающий zip архив с документацией python в pdf формате.
+    """
     downloads_url = urljoin(MAIN_DOC_URL, 'download.html')
     response = get_response(session, downloads_url)
     if response is None:
@@ -98,6 +107,12 @@ def download(session):
     logging.info(f'Архив был загружен и сохранён: {archive_path}')
 
 def pep(session):
+    """
+    Парсер выводящий список статусов документов pep
+    и количество документов в каждом статусе.
+    Также проверяет соответствие статусов на главной
+    и на отдельной странице документа.
+    """
     response = get_response(session, MAIN_PEP_URL)
     if response is None:
         return

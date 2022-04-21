@@ -5,6 +5,10 @@ from exceptions import ParserFindTagException
 
 
 def get_response(session, url):
+    """
+    Функция для получения http ответа по url.
+    Если ответ не получен, сообщает об ошибке.
+    """
     try:
         response = session.get(url) 
         response.encoding = 'utf-8'
@@ -16,6 +20,10 @@ def get_response(session, url):
         )
 
 def find_tag(soup, tag, attrs=None, string=None):
+    """
+    Функция для поиска тега в html странице.
+    Если тег не найден, сообщает об этом.
+    """
     searched_tag = soup.find(tag, attrs=(attrs or {}), string=(string or None))
     if searched_tag is None:
         error_msg = f'Не найден тег {tag} {attrs} {string}'

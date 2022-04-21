@@ -9,6 +9,10 @@ LOG_FORMAT = '%(asctime)s - [%(levelname)s] - %(message)s'
 DT_FORMAT = '%d.%m.%Y %H:%M:%S'
 
 def configure_argument_parser(available_modes):
+    """
+    Функция для настроек работы с аргументами
+    передаваемыми при запуске программы.
+    """
     parser = argparse.ArgumentParser(description='Парсер документации Python')
     parser.add_argument(
         'mode',
@@ -30,6 +34,9 @@ def configure_argument_parser(available_modes):
     return parser
 
 def configure_logging():
+    """
+    Функция для настройки работы логирования.
+    """
     log_dir = BASE_DIR / 'logs'
     log_dir.mkdir(exist_ok=True)
     log_file = log_dir / 'parser.log'
