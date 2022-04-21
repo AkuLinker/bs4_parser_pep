@@ -37,7 +37,6 @@ python3 main.py pep [аргументы]
 ```
 ### Аргументы
 Есть возможность указывать аргументы для изменения работы программы:   
-примеры на *whats-new*
 - -h, --help
 Общая информация о командах.
 ```
@@ -46,14 +45,14 @@ python3 main.py -h
 - -c, --clear-cache
 Очистка кеша перед выполнением парсинга.
 ```
-python3 main.py whats-new -c
+python3 main.py [вариант парсера] -c
 ```
 - -o {pretty,file}, --output {pretty,file}   
 Дополнительные способы вывода данных   
 pretty - выводит данные в командной строке в таблице   
 file - сохраняет информацию в формате csv в папке ./results/
 ```
-python3 main.py whats-new -o file
+python3 main.py [вариант парсера] -o file
 ```
 ### Автор
 - [Иван](https://github.com/AkuLinker/ "GitHub аккаунт")
