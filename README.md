@@ -14,29 +14,29 @@ pip install -r requirements.txt
 python3 main.py [вариант парсера] [аргументы]
 ```
 ### Встроенные парсеры
-- whats-new
+- whats-new   
 Парсер выводящий спсок изменений в python.
 ```
 python3 main.py whats-new [аргументы]
 ```
-- latest_versions
+- latest_versions   
 Парсер выводящий список версий python и ссылки на их документацию.
 ```
 python3 main.py latest-versions [аргументы]
 ```
-- download
+- download   
 Парсер скачивающий zip архив с документацией python в pdf формате.
 ```
 python3 main.py download [аргументы]
 ```
-- pep
+- pep   
 Парсер выводящий список статусов документов pep   
 и количество документов в каждом статусе. 
 ```
 python3 main.py pep [аргументы]
 ```
 ### Аргументы
-Есть возможность указывать аргументы для изменения работы программы:
+Есть возможность указывать аргументы для изменения работы программы:   
 примеры на *whats-new*
 - -h, --help
 Общая информация о командах.
@@ -48,7 +48,7 @@ python3 main.py -h
 ```
 python3 main.py whats-new -c
 ```
-- -o {pretty,file}, --output {pretty,file}
+- -o {pretty,file}, --output {pretty,file}   
 Дополнительные способы вывода данных   
 pretty - выводит данные в командной строке в таблице   
 file - сохраняет информацию в формате csv в папке ./results/
