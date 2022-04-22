@@ -21,13 +21,11 @@ def whats_new(session):
     if response is None:
         return
     soup = BeautifulSoup(response.text, features='lxml')
-
     main_div = find_tag(soup, 'section', attrs={'id': 'what-s-new-in-python'})
     div_with_ul = find_tag(main_div, 'div', attrs={'class': 'toctree-wrapper'})
     sections_by_python = div_with_ul.find_all(
         'li', attrs={'class': 'toctree-l1'}
     )
-
     results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
     for section in tqdm(sections_by_python):
         version_a_tag = section.find('a')
@@ -45,6 +43,7 @@ def whats_new(session):
         )
     return results
 
+
 def latest_versions(session):
     """
     Парсер выводящий список версий python и ссылки на их документацию.
@@ -54,7 +53,6 @@ def latest_versions(session):
         return
     response.encoding = 'utf-8'
     soup = BeautifulSoup(response.text, 'lxml')
-
     sidebar = find_tag(soup, 'div', attrs={'class': 'sphinxsidebarwrapper'})
     ul_tags = sidebar.find_all('ul')
     for ul in ul_tags:
@@ -63,7 +61,6 @@ def latest_versions(session):
             break
     else:
         raise Exception('Ничего не нашлось')
-
     results = [('Ссылка на документацию', 'Версия', 'Статус')]
     pattern = r'Python (?P<version>\d\.\d+) \((?P<status>.*)\)'
     for a_tag in a_tags:
@@ -78,6 +75,7 @@ def latest_versions(session):
         )
     return results
 
+
 def download(session):
     """
     Парсер скачивающий zip архив с документацией python в pdf формате.
@@ -87,7 +85,6 @@ def download(session):
     if response is None:
         return
     soup = BeautifulSoup(response.text, features='lxml')
-
     main_tag = find_tag(soup, 'div', attrs={'role': 'main'})
     table_tag = find_tag(main_tag, 'table', attrs={'class': 'docutils'})
     pdf_a4_tag = find_tag(table_tag, 'a', attrs={
@@ -96,15 +93,14 @@ def download(session):
     pdf_a4_link = pdf_a4_tag['href']
     archive_url = urljoin(downloads_url, pdf_a4_link)
     filename = archive_url.split('/')[-1]
-
     downloads_dir = BASE_DIR / 'downloads'
     downloads_dir.mkdir(exist_ok=True)
     archive_path = downloads_dir / filename
-
     response = session.get(archive_url)
     with open(archive_path, 'wb') as file:
         file.write(response.content)
     logging.info(f'Архив был загружен и сохранён: {archive_path}')
+
 
 def pep(session):
     """
@@ -131,13 +127,17 @@ def pep(session):
         response = get_response(session, pep_url)
         soup = BeautifulSoup(response.text, features='lxml')
         dl_tag = find_tag(soup, 'dl', attrs={'class': 'rfc2822'})
-        dd_tag = find_tag(dl_tag, 'dt', string='Status').find_next_sibling('dd')
+        dd_tag = find_tag(
+            dl_tag, 'dt', string='Status'
+        ).find_next_sibling('dd')
         status = dd_tag.string
         status_in_main_page = find_tag(tr_tag, 'td').string[1:]
         if status not in EXPECTED_STATUS[status_in_main_page]:
             differences.append([pep_url, status, status_in_main_page])
-        if status in pep_sum: pep_sum[status] += 1
-        else: pep_sum[status] = 1
+        if status in pep_sum:
+            pep_sum[status] += 1
+        else:
+            pep_sum[status] = 1
     if differences:
         for pep_url, status, status_in_main_page in differences:
             logging.info(
@@ -151,12 +151,14 @@ def pep(session):
     results.append(('Total: ', total_sum))
     return results
 
+
 MODE_TO_FUNCTION = {
     'whats-new': whats_new,
     'latest-versions': latest_versions,
     'download': download,
     'pep': pep,
 }
+
 
 def main():
     configure_logging()
@@ -172,6 +174,7 @@ def main():
     if results is not None:
         control_output(results, args)
     logging.info('Парсер завершил работу.')
+
 
 if __name__ == '__main__':
     main()

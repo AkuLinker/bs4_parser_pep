@@ -10,13 +10,14 @@ headers = {
     'x64; rv:100.0) Gecko/20100101 Firefox/100.0'
 }
 
+
 def get_response(session, url):
     """
     Функция для получения http ответа по url.
     Если ответ не получен, сообщает об ошибке.
     """
     try:
-        response = session.get(url, headers=headers) 
+        response = session.get(url, headers=headers)
         response.encoding = 'utf-8'
         return response
     except RequestException:
@@ -24,6 +25,7 @@ def get_response(session, url):
             f'Возникла ошибка при загрузке страницы {url}',
             stack_info=True
         )
+
 
 def find_tag(soup, tag, attrs=None, string=None):
     """

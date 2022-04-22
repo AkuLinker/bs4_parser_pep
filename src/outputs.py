@@ -20,12 +20,14 @@ def control_output(results, cli_args):
     else:
         default_output(results)
 
+
 def default_output(results):
     """
     Функция для вывода результата работы программы в консоль.
     """
     for row in results:
-        print(*row)    
+        print(*row)
+
 
 def pretty_output(results):
     """
@@ -37,6 +39,7 @@ def pretty_output(results):
     table.align = 'l'
     table.add_rows(results[1:])
     print(table)
+
 
 def file_output(results, cli_args):
     """

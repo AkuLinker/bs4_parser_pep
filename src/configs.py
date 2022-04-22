@@ -8,6 +8,7 @@ from constants import BASE_DIR
 LOG_FORMAT = '%(asctime)s - [%(levelname)s] - %(message)s'
 DT_FORMAT = '%d.%m.%Y %H:%M:%S'
 
+
 def configure_argument_parser(available_modes):
     """
     Функция для настроек работы с аргументами
@@ -32,6 +33,7 @@ def configure_argument_parser(available_modes):
         help='Дополнительные способы вывода данных'
     )
     return parser
+
 
 def configure_logging():
     """
