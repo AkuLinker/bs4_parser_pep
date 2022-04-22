@@ -4,7 +4,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 import requests_mock
 from argparse import Namespace
-from typing import List, Tuple, Generator
+from typing import List, Tuple
 
 from requests_cache import CachedSession, ALL_METHODS
 from requests_mock import Adapter

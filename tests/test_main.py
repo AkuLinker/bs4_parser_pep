@@ -60,10 +60,26 @@ def test_latest_versions(mock_session):
         'элементами которого должны быть объекты типа `tuple`'
     )
     header = ('Ссылка на документацию', 'Версия', 'Статус')
+    answer = [
+        ('Ссылка на документацию', 'Версия', 'Статус'),
+        ('https://docs.python.org/3.11/', '3.11', 'in development'),
+        ('https://docs.python.org/3.10/', '3.10', 'stable'),
+        ('https://docs.python.org/3.9/', '3.9', 'stable'),
+        ('https://docs.python.org/3.8/', '3.8', 'security-fixes'),
+        ('https://docs.python.org/3.7/', '3.7', 'security-fixes'),
+        ('https://docs.python.org/3.6/', '3.6', 'EOL'),
+        ('https://docs.python.org/3.5/', '3.5', 'EOL'),
+        ('https://docs.python.org/2.7/', '2.7', 'EOL'),
+        ('https://www.python.org/doc/versions/', 'All versions', '')
+    ]
     assert header in got, (
         'В функции `latest_versions` в списке results '
         'первым элементов должен быть кортеж '
         '`Ссылка на документацию, Версия, Статус`'
+    )
+    assert got == answer, (
+        'Функция `latest_versions` должна возвращать '
+        f'объект вида ```{answer}```'
     )
 
 

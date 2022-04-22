@@ -12,15 +12,15 @@ except ImportError:
 
 
 def test_find_tag(soup):
-    got = utils.find_tag(soup, 'div', attrs={'id': 'what-s-new-in-python'})
+    got = utils.find_tag(soup, 'section', attrs={'id': 'what-s-new-in-python'})
     assert isinstance(got, bs4.element.Tag), (
         'Функция `find_tag` в модуле `utils.py` должна возвращать искомый тег'
     )
     assert (
-        '<div class="section" id="what-s-new-in-python">' in got.__str__()
+        '<section id="what-s-new-in-python">' in got.__str__()
     ), (
         'Функция `find_tag` модуля `utils.py` '
-        'не вернула ожидаемый <div> с `id=what-s-new-in-python`'
+        'не вернула ожидаемый <section> с `id=what-s-new-in-python`'
     )
 
 
