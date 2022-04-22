@@ -5,13 +5,18 @@ from requests import RequestException
 from exceptions import ParserFindTagException
 
 
+headers = {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; '
+    'x64; rv:100.0) Gecko/20100101 Firefox/100.0'
+}
+
 def get_response(session, url):
     """
     Функция для получения http ответа по url.
     Если ответ не получен, сообщает об ошибке.
     """
     try:
-        response = session.get(url) 
+        response = session.get(url, headers=headers) 
         response.encoding = 'utf-8'
         return response
     except RequestException:
